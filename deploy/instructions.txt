@@ -1,0 +1,8 @@
+1. Install MySQL 5.0, MySQL Admin GUI Tools
+2. Install Apache Tomcat 5.5
+3. Run the SQL script through MYSQL Admin Tool
+4. Create a user 'carey' with password 'carey' and grant all previledges on the 'carey' schema.
+5. Start the Apache Tomcat server (if its not running already)
+5. Copy the 'eMShop.war' file at <Apache Tomcat home>/webapps/
+6. Point broser at : http://localhost:8080/eMShop/login.jsp
+7. Login using the user 'test' with password 'test'

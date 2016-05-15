@@ -1,0 +1,40 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC "-//Hibernate/Hibernate Mapping DTD 3.0//EN" "http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="com.calance.entity.RentDetails" table="emshop.rent_txn">
+   		<id name="id" column="id" >
+   			<generator class="increment"/>
+ 		 </id>
+
+	<property name="member_id">
+     <column name="movie_id" />
+    </property>
+  
+   <property name="start_date">
+     <column name="start_date" />
+    </property>
+  
+   <property name="due_date">
+     <column name="due_date" />
+    </property>
+	
+	<property name="item_id">
+     <column name="item_id" />
+    </property>
+    
+    <property name="return_date">
+     <column name="return_date" />
+    </property>
+    
+    <property name="rent_amt">
+     <column name="rent_amt" />
+    </property>
+    
+    <property name="item_name">
+     <column name="item_name" />
+    </property>
+	</class>
+
+</hibernate-mapping>

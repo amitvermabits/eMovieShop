@@ -1,0 +1,44 @@
+<?xml version="1.0"?>
+<!DOCTYPE hibernate-mapping PUBLIC 
+"-//Hibernate/Hibernate Mapping DTD 3.0//EN"
+"http://hibernate.sourceforge.net/hibernate-mapping-3.0.dtd">
+
+<hibernate-mapping>
+
+	<class name="com.calance.entity.Movie" table="emshop.movie_mst">
+   		<id name="id" column="id" >
+   			<generator class="increment"/>
+ 		 </id>
+
+	<property name="name">
+     <column name="name" />
+    </property>
+	
+	<property name="rel_date" type="java.util.Date">
+     <column name="rel_date" />
+    </property>
+	
+	<property name="cast" type="java.lang.String">
+     <column name="cast" />
+    </property>
+	
+	<property name="description" type="java.lang.String">
+     <column name="description" />
+    </property>
+    
+    <property name="rating" type="java.lang.Integer">
+     <column name="rating" />
+    </property>
+    
+       
+     <property name="rent_amt" type="java.lang.Double">
+     <column name="rent_amt" />
+    
+    </property>
+    
+    <one-to-one name="dueDays" class="com.calance.entity.DueDays" lazy="false"></one-to-one>
+  
+	</class>
+
+
+</hibernate-mapping>

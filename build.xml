@@ -1,0 +1,241 @@
+<?xml version="1.0"?>
+
+<project name="java_web_project" default="all" basedir=".">
+   
+ 
+  <target name="init_paths" >
+        <echo message="Initializing classpath"/>
+		
+	    <property name="dirs.base" value="${basedir}"/>
+		<property name="deploymentdescription" value="${dirs.base}/src/WEB-INF"/>
+		<property name="appconfig" value="${dirs.base}/src/WEB-INF"/>
+		<property name="warFile" value="knowledgeShare.war"/>
+		<property name="earFile" value="knowledgeShare.ear"/>
+
+
+		<property name="earDir" value="${dirs.base}/build/ear"/>
+		<property name="warDir" value="${dirs.base}/build/war"/>
+
+
+        <!-- Create Web-inf and classes directories -->
+		<mkdir dir="${warDir}/WEB-INF"/>
+		<mkdir dir="${warDir}/WEB-INF/classes"/>
+        <!-- Create Meta-inf and classes directories -->
+		<mkdir dir="${earDir}/META-INF"/>
+
+      <property name="java.src.dir" value="${dirs.base}/src"/>
+	  <property name="java.src.dir.classes" value="${dirs.base}/src/classes"/>
+	  <property name="hibernate-config" value="${dirs.base}/deploy/hibernate"/>
+	  <property name="java.src.dir.classes" value="${dirs.base}/src/WEB-INF/classes"/>
+      <property name="java.path.pattern" value="**/*.java"/>
+      <property name="java.exclude.pattern" value="**/*.class"/>
+      <property name="test.dir" value="${java.src.dir}/../test"/>
+      <property name="webapp.root" value="${java.src.dir}"/>
+      <property name="webinf.classes" value="${webapp.root}/WEB-INF/classes"/>
+      <property name="output.genjsp.dir" value="${webinf.classes}"/>
+      <property name="output.classes.dir" value="${webinf.classes}"/>
+      <property name="xsd.dir" value="${java.src.dir}/../xsd"/>
+   	  <property name="project.jars" value="G:\amitv\home\thirdparty_jar_java6"/>
+	 
+	  <path id="java.classpath">
+         <pathelement path="${output.classes.dir}"/>
+         <pathelement path="${ANT_HOME}/lib/ant.jar"/>
+         <pathelement path="${ANT_HOME}/lib/clover.jar"/>
+         <fileset dir="${project.jars}">
+            <include name="**/*.zip"/>
+            <include name="**/*.jar"/>
+            <exclude name="**/*src.zip"/>
+            <exclude name="**/*doc.zip"/>
+            <exclude name="**/xml/*.jar"/>
+            <exclude name="**/examples/**/*.jar"/>
+            <exclude name="**/examples/**/*.zip"/>
+            <exclude name="**/castor/**/*.jar"/>
+         </fileset>
+
+		
+      </path>
+</target>
+
+<target name="echo_paths" depends="init_paths">
+      <!-- echo out the required environment properties -->
+      <echo message="env.HOME=${env.HOME}"/>
+      <echo message="env.JAVA_HOME=${env.JAVA_HOME}"/>
+      <echo message="PROJECT_ROOT=${build.basedir}"/>
+      <echo message="HOME=${HOME}"/>
+      <echo message="JAVA_HOME=${JAVA_HOME}"/>
+      <echo message="PROJECT_ROOT=${PROJECT_ROOT}"/>
+ </target>
+
+<!-- Main  -->
+<target name="all" depends="build,buildWar"/>
+
+<target name="compile" depends="init_paths,compile.src" description="Compiles the source code under src">
+      <mkdir dir="${output.classes.dir}"/>
+      <echo message="java.src.dir.classes = ${java.src.dir.classes}"/>
+      <echo message="java.path.pattern = ${java.path.pattern}"/>
+      <echo message="output.classes.dir = ${output.classes.dir}"/>
+     
+</target>
+
+<!-- build the application -->
+<target name="build" depends="compile" description="Builds application" >
+
+  <copy todir="${webapp.root}/WEB-INF/classes">
+		      <fileset dir="${hibernate-config}">
+			   <include name="**/*.xml"/>
+			   
+			   <exclude name="**/*.bak"/>
+			  </fileset>
+
+			  
+   </copy>
+
+  <!-- <copy todir="${webapp.root}/WEB-INF/classes">
+		      <fileset dir="${deploymentdescription}" includes="**/applicationContext.xml"/> 
+			  <fileset dir="${deploymentdescription}" includes="**/hibernate.cfg.xml"/> 
+   </copy
+
+   <copy todir="${webapp.root}/WEB-INF/classes/hibernate-config">
+			 <fileset dir="${appconfig}/hibernate-config" includes="**/*.*" excludes="**/*.bak"/>
+   </copy>-->
+
+</target>
+
+<!--Deploying and testing J2EE application -->
+
+<!--Statrt Jboss 3.0 and copy java_web_project.ear file into the JBOSS_HOME/server/default/deploy directory. 
+Jboss application server automatically deploys the application. Open web browse and type http://localhost:8080/java_web_project in the web browser.-->
+
+ <!-- Create the War File -->
+<!--target name="buildEar" depends="init_paths,compile">
+	    <copy todir="${earDir}/META-INF">
+		      <fileset dir="${deploymentdescription}" includes="application.xml" /> 
+	    </copy>
+
+            
+		<jar jarfile="${dirs.base}/${earFile}" basedir="${earDir}" />
+
+		<copy todir="C:/jboss-4.2.2.GA/server/default/deploy">
+		      <fileset dir="${basedir}" includes="java_web_project.ear" /> 
+	    </copy>
+</target>-->
+
+
+
+<!-- Create the War File -->
+<target name="buildWar" depends="init_paths,compile">
+
+<copy todir="${webapp.root}/WEB-INF/classes">
+		      <fileset dir="${hibernate-config}">
+			   <include name="**/*.xml"/>
+			   
+			   <exclude name="**/*.bak"/>
+			  </fileset>
+
+			  
+   </copy>
+   <copy todir="${warDir}">
+		      <fileset dir="${java.src.dir}">
+			   <include name="**/*.jsp"/>
+			   <include name="**/*.css"/>
+			   <exclude name="**/*.bak"/>
+			  </fileset>
+
+			  
+   </copy>
+
+
+	    <copy todir="${warDir}/WEB-INF/classes">
+		      <fileset dir="${webinf.classes}" includes="**/*.class" /> 
+	    </copy>
+
+	    <copy todir="${warDir}/WEB-INF">
+		      <fileset dir="${webapp.root}" includes="web.xml" /> 
+	    </copy>
+
+	    <copy todir="${warDir}">
+		      <fileset dir="${webapp.root}"> 
+				 <include name="**/*.class"/>
+			     <include name="**/*.xml"/> 
+				 <include name="**/*.jar"/>
+				 <include name="**/*.jsp"/>
+			 	 <exclude name="**/*.bak"/>
+			   </fileset>
+	    </copy>
+
+            <!-- Create war file and place in ear directory -->
+		<jar jarfile="${earDir}/${warFile}" basedir="${warDir}" />
+
+</target>
+
+
+ <target name="define_presets" depends="init_paths">
+      <presetdef name="jtljavamapper">
+         <mapper type="glob" from="*.jtl" to="*.java"/>
+      </presetdef>
+
+      <property name="listfiles" value="false"/>
+      <presetdef name="amit.javac">
+         <javac fork="true"
+            srcdir="${java.src.dir.classes}" destdir="${output.classes.dir}"
+            includeAntRuntime="no"
+            debug="on" listfiles="${listfiles}"
+            memoryMaximumSize="512m"
+            includes="${java.path.pattern}"
+            excludes="${java.exclude.pattern}">
+            <classpath refid="java.classpath"/>
+         </javac>
+      </presetdef>      
+ </target>
+
+ <target name="compile.src" description="Compile  source tree java files">
+		   <mkdir dir="${output.classes.dir}"/>
+		    <javac destdir="${output.classes.dir}" source="1.5" target="1.5" debug="${debug}"
+		           deprecation="false" optimize="false" failonerror="true">
+		      <src path="${java.src.dir.classes}"/>
+		      <classpath refid="java.classpath"/>
+		    </javac>
+		    
+</target>
+		  
+
+<target name="clean" depends="clean-classes,clean-ear,clean-war" description="Removes all generated files"/>
+
+<target name="clean-classes" depends="init_paths" description="Removes all .class files">
+<echo message="remove from = ${webapp.root}/WEB-INF/classes"/>
+    <delete failonerror="false">
+      <fileset dir="${webapp.root}/WEB-INF/classes" includes="**/*.class"/>
+	  
+    </delete>
+ </target>
+
+ <target name="clean-ear" depends="init_paths" description="Removes all .class files">
+    <delete failonerror="false">
+      <fileset dir="${earDir}">
+         <include name="**/*.*"/>
+      </fileset>
+    </delete>
+
+	<delete failonerror="false">
+      <fileset dir="${basedir}">
+         <include name="*.ear"/>
+      </fileset>
+    </delete>
+ </target>
+
+<target name="clean-war" depends="init_paths" description="Removes all .class files">
+    <delete failonerror="false">
+      <fileset dir="${warDir}">
+         <include name="**/*.*"/>
+      </fileset>
+    </delete>
+</target>
+
+
+
+
+
+
+</project>
+     
+
